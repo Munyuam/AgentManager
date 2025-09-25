@@ -23,13 +23,46 @@ router.post('/login', async(req, res)=>{
 
     try {
 
-        const users = await logindetails();
-        
-        
+        const username = req.body.username;
+        const password = req.body.password;
+        const agentcode = req.body.agentcode
+
+        const users = await logindetails(username, password, agentcode);
+
+        if(users.success){
+            res.json({
+                success: true,
+                message: "Login successfull"
+            })
+        }
+        else{
+            res.json({
+                success: false,
+                message: "wrong password or username"
+            }) 
+        }
+          
     } catch (error) {
         throw new Error("Network Errro"+ error)
     }
 
 })
+
+router.get('/manager/dashboard', (req, res)=>{
+   
+    res.render('managerdashboard',{
+        title : 'Dashboard - Manager'
+    }) 
+
+})
+
+router.get('/agent/dashboard', (req, res)=>{
+   
+    res.render('agentdashboard',{
+        title : 'Dashboard - Agent'
+    }) 
+
+})
+
 
 module.exports = router

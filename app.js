@@ -1,6 +1,7 @@
 const express = require('express')
 const route = require('./routes/routes')
 const layout = require('express-ejs-layouts')
+const session = require('express-session');
 const dotenv = require('dotenv')
 const app = express();
 dotenv.config();
