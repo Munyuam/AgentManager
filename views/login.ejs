@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AirtelAgent Manager</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="role-selection">
+            <button class="role-option active" data-role="manager">Manager</button>
+            <button class="role-option" data-role="agent">Agent</button>
+        </div>
+        
+        <form id="login-form">
+            <div id="manager-login" class="login-type">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <i class='bx bx-user'></i>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <i class='bx bx-lock-alt'></i>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+            </div>
+            
+            <div id="agent-login" class="login-type" style="display: none;">
+                <div class="form-group">
+                    <label for="phone">Agent Code</label>
+                    <i class='bx bx-id-card'></i>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your Agent Code" required>
+                </div>
+                <div class="form-group">
+                    <label for="agent-password">Password</label>
+                    <i class='bx bx-lock-alt'></i>
+                    <input type="password" id="agent-password" name="agent-password" placeholder="Enter your password" required>
+                </div>
+            </div>
+            
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
