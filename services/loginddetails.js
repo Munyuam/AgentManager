@@ -2,13 +2,13 @@ const pool = require('../db/dbconnector');
 
 const logindetails = async (username = null, password, agentcode = null) => {
   try {
+   
     let role = agentcode ? 'agent' : 'manager';
-    console.log("Role detected:", role);
-    console.log("Agent code:", agentcode);
 
     if (role === "agent") {
+      
       const [agentRows] = await pool.query(
-        `SELECT a.*, u.username, u.role 
+        `SELECT a.*, u.* 
          FROM agents a
          JOIN users u ON a.userID = u.userID
          WHERE a.agentcode = ? AND u.password = ?`,
@@ -16,11 +16,11 @@ const logindetails = async (username = null, password, agentcode = null) => {
       );
 
       if (agentRows.length > 0) {
-        console.log("Agent login success:", agentRows[0].agentcode);
         return { success: true, role: "agent", user: agentRows[0] };
       } else {
         return { success: false, message: "Invalid agent code or password" };
       }
+
     } 
     else {
       const [managerRows] = await pool.query (

@@ -1,0 +1,70 @@
+<%- include('../partials/sidebar') %>
+<main class="main-content">
+    <%- include('../partials/header') %>
+
+    <section id="reports" class="section active">
+        <nav class="report-nav-header">
+            <button id="report-btn-opening" class="report-nav-btn active">Opening Balances</button>
+            <button id="report-btn-closing" class="report-nav-btn">Closing Balances</button>
+        </nav>
+
+        <div id="report-opening-card" class="report-card active">
+            <form action="/dailyTransactions" method="post">
+                <h2>Enter Today's Opening Balances</h2>
+                
+                <div class="form-group">
+                    <label for="report-date">Date</label>
+                    <input type="date" id="report-date" name="reportdate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="transaction-Id">Transaction ID</label>
+                    <input type="text" id="transaction-Id" name="TransactionID" readonly required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="report-opening-mobile-balance">Opening Mobile Balance</label>
+                    <input type="number" id="report-opening-mobile-balance" name="openingMobileBalance" placeholder="Enter opening Mobile Balance">
+                </div>
+
+                <div class="form-group">
+                    <label for="report-opening-cash-balance">Opening Cash Balance</label>
+                    <input type="number" id="report-opening-cash-balance" name="openingCashBalance" placeholder="Enter opening Cash Balance" required>
+                </div>
+                
+                <button type="submit" class="report-submit-btn" style="margin-top: 1rem;">Submit</button>
+            </form>
+        </div>
+
+        <div id="report-closing-card" class="report-card">
+            <form action="/dailyTransactions" method="post">
+                <h2>Enter Today's Closing Balances</h2>
+
+                <div class="form-group">
+                    <label for="closing-report-date">Date</label>
+                    <input type="date" id="closing-report-date" name="reportdate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="re-transaction-Id">Transaction ID</label>
+                    <input type="text" id="re-transaction-Id" name="transactionID" placeholder="Re-Enter Opening Balance Transaction ID" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="report-closing-mobile-balance">Closing Mobile Balance</label>
+                    <input type="number" id="report-closing-mobile-balance" name="closingMobileBalance" placeholder="Enter closing Mobile Balance" required>
+                </div>
+        
+                <div class="form-group">
+                    <label for="report-closing-cash-balance">Closing Cash Balance</label>
+                    <input type="number" id="report-closing-cash-balance" name="closingCashBalance" placeholder="Enter closing Cash Balance" required>
+                </div>
+
+                <button type="submit" class="report-submit-btn" style="margin-top: 1rem;">Submit</button>
+
+                <p class="alert" id="report-alert"></p>
+            </form>
+        </div>
+    </section>
+</main>
+

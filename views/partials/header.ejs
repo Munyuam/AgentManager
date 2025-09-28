@@ -1,0 +1,13 @@
+<header class="navbar">
+    <% if (user) { %>
+        <div class="user-profile">
+            <div class="avatar">A</div>
+            <span style="font-weight: bold;">
+                <%- user.agentCode ? `Agent Code: ${user.agentCode} `: user.userName %>
+            </span>
+            <i class='bx bx-chevron-down'></i>
+        </div>
+    <% }else {%>
+        
+    <% } %>
+</header>

@@ -1,3 +1,42 @@
-<div>
-    <h2>Hi agent waiting for you</h2>
-</div>
+<%- include('partials/sidebar')  %>
+<main class="main-content">
+<%- include('partials/header')  %>
+    <section id="home" class="section active">
+        <% if(user){%>
+        <div class="welcome-banner">
+            <div class="content">
+                <div>
+                    <h1>Welcome 😊, <%= user.userName %>!</h1>
+                    <p>How did you do today ? Insights on your Performance.</p>
+                </div>
+                <div class="card" style="background: rgba(255,255,255,0.1); color: white;">
+                    <div class="metric-value" id="today-transactions">(MK) 105, 00</div>
+                    <div class="metric-label">Salary (% of Accumulated Commission)</div>                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Weekly Performance</h3>
+                <div class="chart-container">
+                    <canvas id="weekly-performance-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Weekly Commissions</h3>
+                <div class="chart-container">
+                    <canvas id="weekly-commissions-chart"></canvas>
+                </div>
+            </div>
+        </div>
+        <% }else{ 
+        %>
+        <div> 
+            <h2>
+                Access to to this resource is Restricted please <a href="/login">Login</a>
+            </h2>
+        </div>
+       <% } %>
+    </section>
+</main>

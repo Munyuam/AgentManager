@@ -11,6 +11,18 @@ const PORT = process.env.PORT;
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+app.use(session({
+  secret: 'grpAssignment',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, 
+    httpOnly: true,
+    maxAge: 24 * 100 * 100 * 1000 
+  }
+}));
+
+
 app.use(express.static('Public'));
 app.set('layout', 'main/layout');
 app.use(layout);
