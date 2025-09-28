@@ -16,9 +16,15 @@ const logindetails = async (username = null, password, agentcode = null) => {
       );
 
       if (agentRows.length > 0) {
-        return { success: true, role: "agent", user: agentRows[0] };
+        return { 
+          success: true, 
+          role: "agent", 
+          user: agentRows[0] 
+        };
       } else {
-        return { success: false, message: "Invalid agent code or password" };
+        return { 
+          success: false, 
+          message: "Invalid agent code or password" };
       }
 
     } 
@@ -29,14 +35,28 @@ const logindetails = async (username = null, password, agentcode = null) => {
       );
 
       if (managerRows.length > 0) {
-        return { success: true, role: "manager", user: managerRows[0] };
+        
+        return {
+          success: true, 
+          role: "manager",
+          user: managerRows[0] 
+        };
+
       } else {
-        return { success: false, message: "Invalid username or password" };
+       
+        return { 
+          success: false, 
+          message: "Invalid username or password" 
+        };
+
       }
     }
   } catch (error) {
     console.error("Login error:", error);
-    return { success: false, message: "Server error: " + error.message };
+    return { 
+      success: false, 
+      message: "Server error: " + error.message 
+    };
   }
 };
 

@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const logindetails = require('../services/loginddetails');
 const submitTransactions = require('../services/submitTransactions')
+const updateProfile = require('../services/updateProfile');
+const getTransactions = require('../services/transactions')
 const { render } = require('ejs');
 
 router.get('/', (req, res) => {
@@ -17,6 +19,7 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
+    
     if (!req.body) {
         throw new Error("found no user information");
     }
@@ -63,7 +66,8 @@ router.post('/login', async (req, res) => {
                 error: 'Wrong password, username, or agent code'
             });
         }
-    } catch (error) {
+    } 
+    catch (error) {
         res.status(500).render('login', {
             title: 'Login - Mobile Money Manager',
             error: 'Network Error: ' + error.message
@@ -72,38 +76,126 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/manager/dashboard', (req, res) => {
-    res.render('managerdashboard', {
-        title: 'Dashboard - Manager',
-        user: req.session
-    });
+    
+    if(req.session.agentId){
+        return  res.render('managerdashboard', {
+            title: 'Dashboard - Manager',
+            user: req.session
+        });
+    }else{
+        return res.status(403).send("Agent was not found to access this information");
+    }
 });
 
-router.get('/agent/dashboard', (req, res) => {
-    res.render('agentdashboard', {
-        title: 'Dashboard - Agent',
-        user: req.session
-    });
+router.get('/agent/dashboard', async(req, res) => {
+    
+    if (!req.session.agentId) {
+        return res.status(403).send("Agent was not found to access this information");
+    }
+
+    try {
+        const agentID = req.session.agentId; 
+        const transaction = await getTransactions(agentID);
+        
+        if (transaction.success) {
+           
+            return res.render('agentdashboard', {
+                title: 'Dashboard - Agent',
+                user: req.session,
+                transactions: transaction.data
+            });
+
+        } else {
+            return res.render('agentdashboard', {
+                title: 'Dashboard - Agent',
+                user: req.session,
+                transactions: []
+            });
+        }
+
+    } catch (error) {
+        console.error("Internal Server Error", error);
+        return res.status(500).send("Network Error");
+    }
 });
 
-router.get('/agent/commissions', (req, res) => {
-    res.render('agent/commissions', {
-        title: 'Agent - commissions',
-        user: req.session
-    });
+router.get('/agent/transactions', async (req, res) => {
+   
+    if (!req.session.agentId) {
+        return res.status(403).send("Agent was not found to access this information");
+    }
+
+    try {
+        const agentID = req.session.agentId; 
+        const transaction = await getTransactions(agentID);
+        
+        if (transaction.success) {
+            return res.render('agent/transactions', {
+                title: 'Agent - Transactions',
+                user: req.session,
+                transactions: transaction.data
+            });
+        } else {
+            return res.render('agent/transactions', {
+                title: 'Agent - Transactions',
+                user: req.session,
+                transactions: []
+            });
+        }
+
+    } catch (error) {
+        console.error("Internal Server Error", error);
+        return res.status(500).send("Network Error");
+    }
 });
 
-router.get('/agent/reports', (req, res) => {
-    res.render('agent/reports', {
-        title: 'Agent - Reports',
-        user: req.session
-    });
+
+router.get('/agent/register', (req, res) => {
+   
+    if(req.session.agentId){
+        return res.render('agent/reports', {
+            title: 'Agent - Reports',
+            user: req.session
+        });
+    }
+
+    else{
+        return res.status(500).send("Agent was not found to access this Information")
+    }
+
 });
 
 router.get('/agent/profiles', (req, res) => {
-    res.render('agent/profiles', {
-        title: 'Agent - Profiles',
-        user: req.session
-    });
+    
+    if(req.session.agentId){
+        return res.render('agent/profiles', {
+            title: 'Agent - Profiles',
+            user: req.session
+        });
+    }
+    else{
+        return res.status(500).send("Agent was not found to access this Information")
+    }
+});
+
+router.post('/updateProfile', async (req, res) => {
+  if (!req.body) {
+    return res.status(400).send("Invalid Data Entered into the form");
+  }
+
+  const { username, phonenumber, userId } = req.body;
+
+  try {
+    const updatedProfile = await updateProfile(username, phonenumber, userId);
+
+    if (!updatedProfile.success) {
+      return res.status(500).send(updatedProfile.message);
+    }
+
+    res.redirect('/agent/profiles');
+  } catch (error) {
+    res.status(500).send("Network Error: " + error.message);
+  }
 });
 
 router.post('/dailyTransactions', async (req, res) => {
@@ -114,6 +206,10 @@ router.post('/dailyTransactions', async (req, res) => {
 
   const agentID = req.session.agentId; 
   const { reportdate, transactionID, openingMobileBalance, openingCashBalance, closingMobileBalance, closingCashBalance } = req.body;
+
+  console.log(transactionID);
+
+  console.log(req.body)
 
   let transaction;
 
@@ -132,7 +228,7 @@ router.post('/dailyTransactions', async (req, res) => {
       return res.status(400).send("Invalid data Entered into the form");
     }
 
-    res.redirect('/agent/reports');
+    res.redirect('/agent/register');
 
   } catch (error) {
     res.status(500).send("Network Error: " + error.message);
@@ -143,14 +239,9 @@ router.post('/dailyTransactions', async (req, res) => {
 router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
-            return res.status(500).render('login', {
-                title: 'Login - Mobile Money Manager',
-                error: 'Logout failed'
-            });
+            return res.status(500).send("Failed to log out user..");
         }
-        res.render('login', {
-            title: 'Login - Mobile Money Manager'
-        });
+        res.redirect('/login')
     });
 });
 

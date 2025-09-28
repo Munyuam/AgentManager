@@ -1,0 +1,57 @@
+<%- include('../partials/sidebar') %>
+<div class="main-content">
+    <%- include('../partials/header') %>
+    <div class="receipt-container">
+        <h2 class="receipt-title">Daily Mobile Money Transaction Log</h2>
+        <table id="daily-financial-summary">
+            <thead>
+                <tr>
+                    <th>Date of Transaction</th>
+                    <th>Transaction-ID</th>
+                    <th>Daily Net Cash-In (MK)</th>
+                    <th>Daily Net Cash-Out (MK)</th>
+                    <th>Total Telecom Fee (MK)</th>
+                    <th>Total Commissions Received (MK)</th>
+                    <th>Agent Commissions (MK)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (transactions && transactions.length > 0) { %>
+                    <% transactions.forEach((transaction)=> { %>
+                        <tr>
+                            <td><%= transaction.cashInDate.toLocaleDateString() || 'N/A' %></td>
+                            <td><%= transaction.transactionID %></td>
+                            <td><%= Math.floor(transaction.netCashIn)%></td>
+                            <td><%= Math.floor(transaction.netCashOut) %></td>
+                            <td><%= Math.floor(transaction.totalFee) %></td>
+                            <td><%= Math.floor(transaction.commission) %></td>
+                            <td><%= Math.floor(transaction.agentCommission) %></td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 20px; color: gray;">
+                            No transactions found for today.
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+            <tfoot id="table-meta" style="font-family:'Roboto Mono', monospace;">
+                <tr>
+                    <td colspan="7">
+                        <p>
+                            <strong>Note</strong> <sup style="color: red;">*</sup> <br> 
+                            <i>
+                                1. Telecommunication fee charge is <strong>30%</strong> of the cashout fee. <br>
+                                2. Cash-in money (float) is not charged any transaction fee. <br>
+                                3. Agent accumulated commissions are <strong>30%</strong> of the total accumulated commission received.
+                            </i>
+                        </p>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div> 
+</div>
+
+

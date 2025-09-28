@@ -2,41 +2,107 @@
 <main class="main-content">
 <%- include('partials/header')  %>
     <section id="home" class="section active">
-        <% if(user){%>
+        <% 
+            if(user){
+
+                const agentCommissionSummed = transactions.reduce((total, transaction) => {
+                    return total + (transaction.agentCommission || 0);
+                }, 0);
+
+                const salary = agentCommissionSummed ;
+        %>
+
         <div class="welcome-banner">
             <div class="content">
                 <div>
                     <h1>Welcome 😊, <%= user.userName %>!</h1>
-                    <p>How did you do today ? Insights on your Performance.</p>
+                    <p>How did you do today? Insights on your Performance.</p>
                 </div>
                 <div class="card" style="background: rgba(255,255,255,0.1); color: white;">
-                    <div class="metric-value" id="today-transactions">(MK) 105, 00</div>
-                    <div class="metric-label">Salary (% of Accumulated Commission)</div>                </div>
+                    <div class="metric-value" id="today-transactions">(MK) <%= salary.toFixed(2) %></div>
+                    <div class="metric-label">Salary (30% of Accumulated Commission)</div>
+                </div>
             </div>
         </div>
 
         <div class="dashboard-grid">
             <div class="card">
-                <h3>Weekly Performance</h3>
+                <h3>Daily Performance</h3>
                 <div class="chart-container">
                     <canvas id="weekly-performance-chart"></canvas>
                 </div>
             </div>
 
             <div class="card">
-                <h3>Weekly Commissions</h3>
+                <h3>Daily Commissions</h3>
                 <div class="chart-container">
                     <canvas id="weekly-commissions-chart"></canvas>
                 </div>
             </div>
         </div>
-        <% }else{ 
-        %>
+        <% } else { %>
         <div> 
             <h2>
-                Access to to this resource is Restricted please <a href="/login">Login</a>
+                Access to this resource is Restricted. Please <a href="/login">Login</a>
             </h2>
         </div>
        <% } %>
     </section>
 </main>
+<script>
+
+    const transactions = <%- JSON.stringify(transactions) %>;
+
+    const labels = transactions.map(transaction => new Date(transaction.cashInDate).toLocaleDateString()); 
+    const commissions = transactions.map(transaction => transaction.aagentCommission);
+    const cashIns = transactions.map(transaction => transaction.netCashIn);
+    const cashOuts = transactions.map(transaction => transaction.netCashOut);
+
+    const ctx1 = document.getElementById("weekly-commissions-chart").getContext("2d");
+
+    new Chart(ctx1, {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Agent Commission",
+                data: commissions,
+                backgroundColor: "rgba(54, 162, 235, 0.6)"
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    const ctx2 = document.getElementById("weekly-performance-chart").getContext("2d");
+    new Chart(ctx2, {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Net Cash In",
+                    data: cashIns,
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    fill: false
+                },
+                {
+                    label: "Net Cash Out",
+                    data: cashOuts,
+                    borderColor: "rgba(255, 99, 132, 1)",
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
