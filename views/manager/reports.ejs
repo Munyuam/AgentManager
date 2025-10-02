@@ -1,0 +1,60 @@
+<main class="__dashboard">
+    <div class="__dashboard__main">
+        <%- include('../partials/managernavbar')  %>
+        <div class="__card" style="width: 73%;">
+            <h2>Transactions</h2>
+            <p style="color: #6B7280;">Start searching agents from transaction history</p>
+            
+            <div>
+                <form action="/manager/transactions" method="get">
+                    <div class="__search-agent-form">
+                        <input 
+                            type="text" 
+                            name="agentcode" 
+                            id="agentcode" 
+                            placeholder="Search by AgentCode..." 
+                            class="form-group input">
+                        <button type="submit" class="btn">
+                            <i class='bx bx-search-alt'></i> Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <table id="reports-table">
+                <thead>
+                    <tr>
+                        <th>Agent Name</th>
+                        <th>Date</th>
+                        <th>Cash-In</th>
+                        <th>Cash-Out</th>
+                        <th>Generated Fees</th>
+                        <th>Agent Commission</th>
+                        <th>Owner Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (query && query.length > 0) { %>
+                        <% query.forEach(t => { %>
+                            <tr>
+                                <td><%= t.username %></td>
+                                <td><%= new Date(t.cashInDate).toDateString() %></td>
+                                <td><%= t.netCashIn.toLocaleString() %></td>
+                                <td><%= t.netCashOut.toLocaleString() %></td>
+                                <td><%= t.totalFee.toFixed(2) %></td>
+                                <td><%= t.agentCommission.toFixed(2) %></td>
+                                <td><%= t.companyEarnings.toFixed(2) %></td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="7" style="text-align: center; color: #6B7280;">
+                                No record found! Try searching for an agent code (e.g 40001)
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>

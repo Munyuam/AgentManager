@@ -1,0 +1,40 @@
+<main class="__dashboard">
+    <div class="__dashboard__main">
+        <%- include('../partials/managernavbar')  %>
+
+        <div class="__card" style="width: 73%;">
+            <% if(user){ %>
+            <form action="/update/<%= user[0].userID %>" method="post">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" value="<%= user[0].username %>" id="username" placeholder="Enter agent username">
+                </div>
+                <div class="form-group">
+                    <label for="agentcode">Agent Code</label>
+                    <input type="number" value="<%= user[0].agentcode %>" name="agentcode" id="agentcode">
+                </div>
+                <div class="form-group">
+                    <label for="phonenumber">Phone Number</label>
+                    <input type="text" value="<%= user[0].phoneno %>" name="phonenumber" id="phonenumber">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="text" value="<%= user[0].password %>" name="password" id="password">
+                </div>
+                <button type="submit" class="btn btn-edit">
+                    <i class='bxr bx-edit'></i> Edit
+                </button>
+            </form>
+            <% } else { %>
+                <div>
+                    <h5>Agent was not found</h5>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</main>
+
+<script>
+    const data = <%- JSON.stringify(user) %>
+    console.log("EJS user data:", data);
+</script>

@@ -16,7 +16,11 @@
         <i class='bx bx-lock-alt'></i>
         <input type="password" id="password" name="password" placeholder="Enter your password" required>
       </div>
+        <% if(typeof error !== 'undefined' && error){ %>
+          <p style="color: red;"><%= error %></p>
+        <% } %>
       <button type="submit" id="submit-manager-login" class="login-btn">Login</button>
+
     </form>
 
     <form action="/login" method="post" id="agent-login" class="login-type" style="display:none;">
@@ -30,6 +34,9 @@
         <i class='bx bx-lock-alt'></i>
         <input type="password" id="agentPassword" name="password" placeholder="Enter your password" required>
       </div>
+        <% if( typeof error !== 'undefined' && error) { %>
+          <p style="color: red;"><%= error %></p>
+        <% } %>
       <button type="submit" id="submit-agent-login" class="login-btn">Login</button>
     </form>
   </div>

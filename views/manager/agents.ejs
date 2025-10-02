@@ -1,0 +1,48 @@
+<main class="__dashboard">
+    <div class="__dashboard__main">
+        <%- include('../partials/managernavbar')  %>
+    
+        <div class="__card" style="width: 73%;">
+            <div class="__card__header">
+                <h3 class="__card__title">Registered Agents</h3>
+                
+                <div class="__card__icon __card__icon--add--user" title="add agent" onclick="addagent()">
+                     <i class='bxr  bx-plus-square'  title="add agent" style="color:white"></i>
+                </div>
+                
+            </div>
+            <table class="__table" id="agents-brief-table">
+                <thead>
+                    <tr>
+                        <th class="__table__header">UserName</th>
+                        <th class="__table__header">Phone Number</th>
+                        <th class="__table__header">Agent Code</th>
+                        <th class="__table__header">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% if(agents){ 
+                    agents.forEach((agent) =>{    
+                %>  
+                    <tr>
+                        <td><%= agent.username %></td>
+                        <td><%= agent.phoneno %></td>
+                        <td><%= agent.agentcode %></td>
+                        <td>
+                            <a href="/update/<%= agent.userID %>" class="btn  btn-edit"><i class='bxr  bx-edit'  ></i> Edit</a>
+                            <a href="/delete/<%= agent.userID %>" class="btn btn-delete"><i class='bxr  bx-trash'  ></i> Delete</a>
+                        </td>
+
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            <% }else{ %>
+            <div><h5>No agents were found</h5></div>
+            <% } %>
+        </div>
+    </div>
+</main>
+<script>
+    const addagent = ()=>{window.location.href = '/manager/new'}
+</script>

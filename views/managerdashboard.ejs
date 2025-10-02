@@ -1,3 +1,73 @@
-<div>
-    <h3>Welcome to dashboard Administrator</h3>
-</div>
+<main class="__dashboard">
+    <div class="__dashboard__main">
+        <%- include('partials/managernavbar')  %>
+
+        <section id="home" class="__section __section--active">
+            <div class="__banner">
+                <div class="__banner__content">
+                    <div>
+                        <h1 class="__banner__title">Welcome back, <span id="greet-username"><%= user.userName %></span>!</h1>
+                        <p class="__banner__description">Here's what's happening with your agent's today.</p>
+                    </div>
+                    <div class="__banner__stats">
+                       <% if(businessdetails && businessdetails.length > 0) { %>
+                            <% const revenue = businessdetails.reduce((sum, item) => sum + item.companyEarnings, 0); %>
+                            <div class="__stat-item">
+                                <h3 id="total-revenue"><%= revenue.toLocaleString() %></h3>
+                                <p>Total Revenue</p>
+                            </div>
+                            <div class="__stat-item">
+                                <h3 id="active-agents-home"><%= businessdetails.length %></h3>
+                                <p>Active Agents</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="__grid __grid--2" >
+
+                <div class="__card" style="width: 73%;">
+                    <div class="__card__header">
+                        <h3 class="__card__title">Weekly Cash In/Out</h3>
+                        <div class="__card__icon __card__icon--primary"><i class='bx bx-transfer'></i></div>
+                    </div>
+                    <div class="__card__chart" style="width: 100%; margin: auto;">
+                        <canvas id="weekly-cash-chart"></canvas>
+                    </div>
+                </div>             
+            </div>
+        </section>
+    </div>
+</main>
+
+<script>
+
+ const businessdetails = <%- JSON.stringify(businessdetails || []) %>;
+ const weeklyCtx = document.getElementById('weekly-cash-chart').getContext('2d');
+  
+ new Chart(weeklyCtx, {
+    type: 'line',
+    data: {
+      labels: businessdetails.map(b => b.agentName),
+      datasets: [
+        {
+          label: 'Cash In',
+          data: businessdetails.map(b => b.totalNetCashIn),
+          borderColor: '#22c55e',
+          backgroundColor: 'rgba(34,197,94,0.2)',
+          tension: 0.4
+        },
+        {
+          label: 'Cash Out',
+          data: businessdetails.map(b => b.totalNetCashOut),
+          borderColor: '#ef4444',
+          backgroundColor: 'rgba(239,68,68,0.2)',
+          tension: 0.4
+        }
+      ]
+    },
+    options: { responsive: true }
+  });
+
+</script>
