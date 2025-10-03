@@ -6,7 +6,7 @@ const agentBusinessDetails = async () => {
 
     try {
         const sql = `
-            SELECT 
+           SELECT 
                 a.agentcode,
                 u.username,
                 u.phoneno,
@@ -20,6 +20,7 @@ const agentBusinessDetails = async () => {
                 ON a.agentID = i.agentID
             INNER JOIN users u
                 ON a.userID = u.userID
+            GROUP BY a.agentcode, u.username, u.phoneno, u.role;
         `;
         
         const [rows] = await pool.query(sql);
@@ -35,17 +36,17 @@ const agentBusinessDetails = async () => {
         }
 
         const transactions = rows.map(agent => {
-            const totalFee = agent.totalNetCashOut * feeRate;
-            const agentCommission = totalFee * agentCommissionRate;
-            const companyEarnings = totalFee - agentCommission;
+            const totalFee = Math.abs(agent.totalNetCashOut * feeRate);
+            const agentCommission = Math.abs(totalFee * agentCommissionRate);
+            const companyEarnings = Math.abs(totalFee - agentCommission);
 
             return {
                 agentCode: agent.agentcode,
                 agentName: agent.username,
                 phone: agent.phoneno,
                 role: agent.role,
-                totalNetCashIn: agent.totalNetCashIn,
-                totalNetCashOut: agent.totalNetCashOut,
+                totalNetCashIn: Math.abs(agent.totalNetCashIn),
+                totalNetCashOut: Math.abs(agent.totalNetCashOut),
                 totalFee,
                 agentCommission,
                 companyEarnings

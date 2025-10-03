@@ -25,12 +25,12 @@ const getTransactions = async (agentID) => {
         console.log(rows);
 
         const transactions = rows.map(transaction => {
-            const netCashIn = transaction.closingCashBalance - transaction.openingCashBalance;
-            const netCashOut = transaction.openingMobileBalance - transaction.closingMobileBalance;
+            const netCashIn = Math.abs(transaction.closingCashBalance - transaction.openingCashBalance);
+            const netCashOut = Math.abs(transaction.openingMobileBalance - transaction.closingMobileBalance);
 
-            const totalFee = netCashOut * feeRate;
-            const commission = netCashOut - totalFee;
-            const agentCommission = totalFee * agentCommissionRate;
+            const totalFee = Math.abs(netCashOut * feeRate);
+            const commission = Math.abs(netCashOut - totalFee);
+            const agentCommission = Math.abs(totalFee * agentCommissionRate);
 
             return {
                 ...transaction,

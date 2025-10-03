@@ -21,7 +21,6 @@ const searchTransactions = async (agentCode) => {
             INNER JOIN users u
                 ON a.userID = u.userID
             WHERE a.agentcode = ?
-            GROUP BY a.agentcode, u.username, u.phoneno, u.role
         `;
         
         const [rows] = await pool.query(sql, [agentCode]);
@@ -35,12 +34,12 @@ const searchTransactions = async (agentCode) => {
         }
         
         const transactions = rows.map(transaction => {
-            const netCashIn = transaction.closingCashBalance - transaction.openingCashBalance;
-            const netCashOut = transaction.openingMobileBalance - transaction.closingMobileBalance;
+            const netCashIn = Math.abs(transaction.closingCashBalance - transaction.openingCashBalance);
+            const netCashOut = Math.abs(transaction.openingMobileBalance - transaction.closingMobileBalance);
 
-            const totalFee = netCashOut * feeRate;
-            const agentCommission = totalFee * agentCommissionRate;
-            const companyEarnings = totalFee - agentCommission;
+            const totalFee = Math.abs(netCashOut * feeRate);
+            const agentCommission = Math.abs(totalFee * agentCommissionRate);
+            const companyEarnings = Math.abs(totalFee - agentCommission);
 
             return {
                 ...transaction,

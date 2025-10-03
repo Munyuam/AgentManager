@@ -16,14 +16,6 @@
     </div>
     <div class="__navbar__user">
         <div class="__navbar__avatar">M</div>
-        <span id="username">Manager</span>
-        <i class='bx bx-chevron-down'></i>
-    </div>
-    <div class="__navbar__dropdown" id="user-dropdown">
-        <div class="__navbar__user-info">
-            <p class="__navbar__user-name">Manager</p>
-            <p class="__navbar__user-role">Manager</p>
-        </div>
-        <a href="#" id="logout" class="__navbar__logout">Logout</a>
-    </div>
+        <span id="username">  <%= user.userName ? user.userName.toUpperCase() : 'MANAGER' %></span>
+    </div>  
 </header>

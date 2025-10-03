@@ -36,7 +36,7 @@ router.post('/login', async (req, res) => {
 
     try {
         const users = await logindetails(username, password, agentcode);
-        console.log(users);
+
         if (users.success && users.user) {
             req.session.role = users.user.role;
             req.session.agentId = users.user.agentID;
@@ -89,14 +89,17 @@ router.get('/manager/dashboard', async (req, res) => {
 
   try {
     const businessdetails = await agentBusinessDetails();
+    const getagents = await getAgents();
 
-    if (businessdetails.success) {
+    if (businessdetails.success && getagents) {
       
         return res.render('managerdashboard', {
             title: 'Dashboard - Manager',
             user: req.session,
-            businessdetails: businessdetails.data
+            businessdetails: businessdetails.data,
+            agents : getagents.agents
       });
+
     } else {
       return res.status(500).send("Network Error: Failed to fetch data from the database");
     }
@@ -121,6 +124,7 @@ router.get('/manager/agents', async (req, res) => {
     if(getagents.success){
         res.render('manager/agents',{
             title: 'Manager - agents',
+            user: req.session,
             agents: getagents.agents
         })
     }else{
@@ -139,7 +143,8 @@ router.get('/manager/new', async (req, res) => {
     }
     
     res.render('manager/addAgent',{
-        title: 'Manager - new agent'
+        title: 'Manager - new agent',
+        user: req.session
     })
 });
 
@@ -258,7 +263,8 @@ router.get('/manager/analytics', async(req, res) => {
         if(businessdetails){
             console.log(businessdetails.data)
             return res.render('manager/analytics',{
-                title: 'Manager - analytics',  
+                title: 'Manager - analytics', 
+                user:req.session, 
                 data: businessdetails.data
             })
         }else{
@@ -299,6 +305,7 @@ router.get('/manager/transactions', async(req, res) => {
                 return res.render('manager/reports',{
                     title: 'Manager - reports',
                     query: [],
+                    user: req.session,
                     error: 'Invalid Agent Code entered' 
                 })
             }
@@ -311,6 +318,7 @@ router.get('/manager/transactions', async(req, res) => {
                 return res.render('manager/reports',{
                     title: 'Manager - reports',
                     query: transactions.data,
+                    user: req.session,
                     message: 'search query has been made successully' 
                 })
             }
@@ -318,6 +326,7 @@ router.get('/manager/transactions', async(req, res) => {
             return res.render('manager/reports',{
                     title: 'Manager - reports',
                     query: [],
+                    user: req.session,
                     message: 'found successfully' 
             })
      
@@ -346,6 +355,8 @@ router.get('/agent/dashboard', async(req, res) => {
         const agentID = req.session.agentId; 
         const transaction = await getTransactions(agentID);
         
+        console.log("transactions from the backend: ",transaction);
+
         if (transaction.success) {
            
             return res.render('agentdashboard', {

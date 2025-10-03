@@ -21,11 +21,11 @@
                         <tr>
                             <td><%= transaction.cashInDate.toLocaleDateString() || 'N/A' %></td>
                             <td><%= transaction.transactionID %></td>
-                            <td><%= Math.floor(transaction.netCashIn)%></td>
-                            <td><%= Math.floor(transaction.netCashOut) %></td>
-                            <td><%= Math.floor(transaction.totalFee) %></td>
-                            <td><%= Math.floor(transaction.commission) %></td>
-                            <td><%= Math.floor(transaction.agentCommission) %></td>
+                            <td><%= Math.floor(Math.abs(transaction.netCashIn))%></td>
+                            <td><%= Math.floor(Math.abs(transaction.netCashOut)) %></td>
+                            <td><%= Math.floor(Math.abs(transaction.totalFee)) %></td>
+                            <td><%= Math.floor(Math.abs(transaction.commission)) %></td>
+                            <td><%= Math.floor(Math.abs(transaction.agentCommission)) %></td>
                         </tr>
                     <% }) %>
                 <% } else { %>

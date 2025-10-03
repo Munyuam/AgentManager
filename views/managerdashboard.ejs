@@ -10,14 +10,14 @@
                         <p class="__banner__description">Here's what's happening with your agent's today.</p>
                     </div>
                     <div class="__banner__stats">
-                       <% if(businessdetails && businessdetails.length > 0) { %>
+                       <% if(businessdetails && businessdetails.length > 0 && agents.length > 0) { %>
                             <% const revenue = businessdetails.reduce((sum, item) => sum + item.companyEarnings, 0); %>
                             <div class="__stat-item">
-                                <h3 id="total-revenue"><%= revenue.toLocaleString() %></h3>
+                                <h3 id="total-revenue">(MK) <%= Math.abs(revenue) %></h3>
                                 <p>Total Revenue</p>
                             </div>
                             <div class="__stat-item">
-                                <h3 id="active-agents-home"><%= businessdetails.length %></h3>
+                                <h3 id="active-agents-home"><%= agents.length %></h3>
                                 <p>Active Agents</p>
                             </div>
                         <% } %>
@@ -30,20 +30,24 @@
                 <div class="__card" style="width: 73%;">
                     <div class="__card__header">
                         <h3 class="__card__title">Weekly Cash In/Out</h3>
-                        <div class="__card__icon __card__icon--primary"><i class='bx bx-transfer'></i></div>
-                    </div>
-                    <div class="__card__chart" style="width: 100%; margin: auto;">
+                            <div class="__card__icon __card__icon--primary" title="analytics" onclick="window.location.href='/manager/Analytics'">
+                                <i class='bx bx-transfer'></i>
+                            </div>
+                        </div>
+                    <div class="__card__chart">
                         <canvas id="weekly-cash-chart"></canvas>
                     </div>
-                </div>             
+                </div>           
             </div>
         </section>
     </div>
 </main>
+</style>
 
 <script>
 
  const businessdetails = <%- JSON.stringify(businessdetails || []) %>;
+ const agentdetails = <%- JSON.stringify(agents || []) %>;
  const weeklyCtx = document.getElementById('weekly-cash-chart').getContext('2d');
   
  new Chart(weeklyCtx, {

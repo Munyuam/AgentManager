@@ -1,99 +1,92 @@
 <main class="__dashboard">
-    <div class="__dashboard__main" >
-       <div class="__custom-dashboard">
-             <%- include('../partials/managernavbar')  %>
+  <div class="__dashboard__main">
+    <div class="__custom-dashboard">
+      <%- include('../partials/managernavbar') %>
 
-        <h2>Financial Ratios</h2>
-        <p style="color: #6B7280;">Get Insights on how the Business is operating</p>
+      <h2>Financial Ratios</h2>
+      <p style="color: #6B7280;">Get insights on how the business is operating</p>
 
-        <div class="__card-container">
-            <% if(data && data.length > 0){ %>
-                <div class="__graph">
-                    <canvas id="revenueChart"></canvas>
-                </div>
-                <div class="__graph">
-                    <canvas id="cashFlowChart"></canvas>
-                </div>
-                <div class="__graph">
-                    <canvas id="balanceChart"></canvas>
-                </div>
-                <div class="__graph">
-                    <canvas id="efficiencyChart"></canvas>
-                </div>
-            <% } else { %>
-                <div>
-                    <h5>Shows like business data is absent</h5>
-                </div>
-            <% } %>
-        </div>  
-       </div>   
+      <div class="__card-container">
+        <% if(data && data.length > 0){ %>
+          <div class="__graph"><canvas id="revenueChart"></canvas></div>
+          <div class="__graph"><canvas id="cashFlowChart"></canvas></div>
+          <div class="__graph"><canvas id="balanceChart"></canvas></div>
+          <div class="__graph"><canvas id="efficiencyChart"></canvas></div>
+        <% } else { %>
+          <div><h5>No business data available</h5></div>
+        <% } %>
+      </div>
     </div>
+  </div>
 </main>
 
 <script>
-    const financialData = <%- JSON.stringify(data || []) %>;
+  const financialData = <%- JSON.stringify(data || []) %>;
 
-    if(financialData.length > 0){
-        const labels = financialData.map(item => item.agentName); 
+  if(financialData.length > 0){
+    const labels = financialData.map(item => item.agentName);
 
-        new Chart(document.getElementById('revenueChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Total Net Cash In',
-                    data: financialData.map(item => item.totalNetCashIn),
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: { responsive: true }
-        });
+    const chartOptions = { responsive: true, plugins: { legend: { position: 'bottom' } } };
 
-        new Chart(document.getElementById('cashFlowChart').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Total Net Cash Out',
-                    data: financialData.map(item => item.totalNetCashOut),
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    tension: 0.3
-                }]
-            },
-            options: { responsive: true }
-        });
+    new Chart(document.getElementById('revenueChart'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Total Net Cash In',
+          data: financialData.map(item => item.totalNetCashIn),
+          backgroundColor: 'rgba(54, 162, 235, 0.5)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: chartOptions
+    });
 
-        new Chart(document.getElementById('balanceChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Total Fee',
-                    data: financialData.map(item => item.totalFee),
-                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: { responsive: true }
-        });
+    new Chart(document.getElementById('cashFlowChart'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Total Net Cash Out',
+          data: financialData.map(item => item.totalNetCashOut),
+          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          tension: 0.3
+        }]
+      },
+      options: chartOptions
+    });
 
-        new Chart(document.getElementById('efficiencyChart').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Agent Commission',
-                    data: financialData.map(item => item.agentCommission),
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                    tension: 0.3
-                }]
-            },
-            options: { responsive: true }
-        });
-    }
+    // Balance Chart
+    new Chart(document.getElementById('balanceChart'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Total Fee',
+          data: financialData.map(item => item.totalFee),
+          backgroundColor: 'rgba(75, 192, 192, 0.5)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: chartOptions
+    });
+
+    new Chart(document.getElementById('efficiencyChart'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Agent Commission',
+          data: financialData.map(item => item.agentCommission),
+          borderColor: 'rgba(153, 102, 255, 1)',
+          backgroundColor: 'rgba(153, 102, 255, 0.2)',
+          tension: 0.3
+        }]
+      },
+      options: chartOptions
+    });
+  }
 </script>

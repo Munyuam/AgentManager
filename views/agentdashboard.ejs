@@ -9,7 +9,7 @@
                     return total + (transaction.agentCommission || 0);
                 }, 0);
 
-                const salary = agentCommissionSummed ;
+                const salary = Math.abs(agentCommissionSummed);
         %>
 
         <div class="welcome-banner">
@@ -27,7 +27,7 @@
 
         <div class="dashboard-grid">
             <div class="card">
-                <h3>Daily Performance</h3>
+                <h3>Daily CashIn and CashOut</h3>
                 <div class="chart-container">
                     <canvas id="weekly-performance-chart"></canvas>
                 </div>
@@ -54,14 +54,14 @@
     const transactions = <%- JSON.stringify(transactions) %>;
 
     const labels = transactions.map(transaction => new Date(transaction.cashInDate).toLocaleDateString()); 
-    const commissions = transactions.map(transaction => transaction.aagentCommission);
+    const commissions = transactions.map(transaction => transaction.agentCommission);
     const cashIns = transactions.map(transaction => transaction.netCashIn);
     const cashOuts = transactions.map(transaction => transaction.netCashOut);
 
     const ctx1 = document.getElementById("weekly-commissions-chart").getContext("2d");
 
     new Chart(ctx1, {
-        type: "bar",
+        type: "line",
         data: {
             labels: labels,
             datasets: [{
